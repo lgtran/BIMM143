@@ -1,4 +1,5 @@
 # bimm143
 
-This is my classwork from BIMM143 Spring 2019 UC San Diego (https://bioboot.github.io/bimm143_S19/)
+This is my classwork from [BIMM143 Spring 2019] (https://bioboot.github.io/bimm143_S19/) at UCSD
+
 
