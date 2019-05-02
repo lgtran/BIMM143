@@ -1,0 +1,32 @@
+#' title: "Class 5 R Graphics"
+#' author: "Luan Tran"
+#' date: "Apr 18 2019"
+#' ---
+  
+# Class 5 R Graphics
+
+# 2A. Line
+weight <- read.table("bimm143_05_rstats/weight_chart.txt", header = TRUE)
+
+plot( weight$Age, weight$Weight, xlab="Age (months)", 
+      ylab="Weight (kg)", pch=18,
+      typ="b",
+      main="Some Title")
+# 2B 
+feat <- read.table("bimm143_05_rstats/feature_counts.txt", sep="\t", 
+           header = TRUE)
+barplot(feat$Count)
+
+# I need to argue with this plot to make it a bit nicer.
+par(mar=c(3,15,4,2))
+barplot(feat$Count, names.arg = feat$Feature, horiz = TRUE,
+        las=1, ylab = "A Title", main = "Some title")
+
+# 3A
+counts <- read.table("bimm143_05_rstats/male_female_counts.txt", header = TRUE, sep="\t")
+counts <- read.delim("bimm143_05_rstats/male_female_counts.txt")
+barplot(counts$Count, names.arg = counts$Sample, las=2,
+        col=c("red","blue","green") )
+
+barplot(counts$Count, names.arg = counts$Sample, las=2,
+        col=c(1,2))
