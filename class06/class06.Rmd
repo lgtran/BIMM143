@@ -2,7 +2,7 @@
 title: 'Class 06: R function'
 author: "Luan Tran"
 date: "4/18/2019"
-output: html_document
+output: github_document
 ---
 n
 ```{r setup, include=FALSE}
