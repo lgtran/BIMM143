@@ -1,0 +1,51 @@
+---
+title: "class8_2"
+author: "Luan Tran"
+date: "4/25/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+x <- read_csv("UK_foods.csv")
+x
+```
+```{r}
+rownames(x) <- x[,1]
+x <- x[,-1]
+head(x)
+
+```
+
+```{r}
+x <- read.csv("UK_foods.csv", row.names=1)
+head(x)
+```
+
+```{r}
+barplot(as.matrix(x), beside=T, col=rainbow(nrow(x)))
+```
+
+Pairs plot can be helpful for small datasets like this one but quickly becomes untractabke with larger datasets with too many points overlapping etc...
+```{r}
+pairs(x, col=rainbow(10), pch=16)
+```
+
+```{r}
+pca <- prcomp(t(x))
+summary(pca)
+```
+
+```{r}
+plot(pca$x[,1], pca$x[,2], xlab="PC1", ylab="PC2", xlim=c(-270,500))
+text(pca$x[,1], pca$x[,2], colnames(x), col=mycols)
+```
+
+```{r}
+mycols <- c("orange", "red", "blue", "darkgreen")
+
+```
+
