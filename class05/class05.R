@@ -1,6 +1,7 @@
 #' title: "Class 5 R Graphics"
 #' author: "Luan Tran"
 #' date: "Apr 18 2019"
+#' output: github_document
 #' ---
   
 # Class 5 R Graphics
