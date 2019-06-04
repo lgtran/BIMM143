@@ -1,0 +1,154 @@
+---
+title: "Class: Structural Bioinformatics"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## The PDB database
+
+
+
+The [PDB](http://www.rcsb.org/) is the is the main repository for biomolecular structure data.
+
+Here we examine the contents of the PDB:
+
+```{r}
+db <- read.csv("Data Export Summary.csv", row.names=1)
+head(db)
+```
+How many are X-Ray?
+```{r}
+(db$Total[1]/sum(db$Total)) * 100
+```
+Percentage of Proteins in the total
+```{r}
+sum(db$Proteins)/sum(db$Total) * 100
+```
+
+```{r}
+library(datapasta)
+tmp <- data.frame(stringsAsFactors=FALSE,
+   Experimental.Method = c("X-Ray", "NMR", "Electron Microscopy", "Other",
+                           "Multi Method", "Total"),
+              Proteins = c(126880, 11062, 2277, 256, 129, 140604),
+         Nucleic.Acids = c(2012, 1279, 31, 4, 5, 3331),
+    ProteinComplex = c(6547, 259, 800, 6, 2, 7614),
+                 Other = c(8, 8, 0, 13, 1, 30),
+                 Total = c(135447, 12608, 3108, 279, 137, 151579)
+)
+tmp
+
+```
+
+> Q2. Type HIV in the PDB website search box on the home page and determine how many HIV-1 Protease structures are in the current PDB?
+
+There are 1157 structures 
+
+### Section 3 using Bio3d
+
+
+
+```{r}
+library(bio3d)
+pdb <- read.pdb("1hsg")
+pdb
+```
+```{r}
+attributes(pdb)
+head(pdb$atom)
+pdb$atom[1:2, c("eleno", "elety", "x","y","z")]
+pdb$atom$elety[1:2]
+plot.bio3d(pdb$atom$b[pdb$calpha], sse=pdb, typ="l")
+```
+```{r}
+pdb$xyz
+dim(pdb$xyz)
+pdb$xyz[ 1, atom2xyz(1:2) ]
+```
+Atom Selection
+```{r}
+ca.inds <- atom.select(pdb, "calpha")
+prot.pdb <- atom.select(pdb, "protein", value = TRUE)
+write.pdb(prot.pdb, file="1hsg_protein.pdb")
+
+```
+
+```{r}
+lig.pdb <- atom.select(pdb, "ligand", value = TRUE)
+write.pdb(prot.pdb, file="1hsg_ligand.pdb")
+```
+
+```{r}
+# Print details of the first few selected atoms
+head( pdb$atom[ca.inds$atom, ] )
+
+# And selected xyz coordinates
+head( pdb$xyz[, ca.inds$xyz] )
+```
+
+```{r}
+# Select chain A
+a.inds <- atom.select(pdb, chain="A")
+# Select C-alphas of chain A
+ca.inds <- atom.select(pdb, "calpha", chain="A")
+# We can combine multiple selection criteria to return their
+
+cab.inds <- atom.select(pdb, elety=c("CA","CB"), chain="A",
+resno=10:20)
+```
+
+
+```{r}
+aa <- get.seq("1ake_A")
+
+```
+
+
+```{r}
+# Blast or hmmer search
+b <- blast.pdb(aa)
+```
+
+
+```{r}
+# Plot a summary of search results
+hits <- plot(b)
+```
+
+```{r}
+head(hits$pdb.id)
+
+```
+
+```{r}
+files <- get.pdb(hits$pdb.id, path="pdbs", split=TRUE, gzip=TRUE)
+```
+```{r}
+# Align structures
+pdbs <- pdbaln(files)
+# Vector containing PDB codes
+ids <- basename.pdb(pdbs$id)
+# Draw schematic alignment
+plot(pdbs, labels=ids)
+```
+
+```{r}
+# Calculate sequence conservation
+cons <- conserv(pdbs, method="entropy22")
+# SSE annotations
+sse <- pdbs2sse(pdbs, ind=1, rm.gaps=FALSE)
+# Plot conservation per residue
+plotb3(cons, sse=sse, ylab="Sequence entropy")
+```
+
+```{r}
+
+anno <- pdb.annotate(ids)
+print(unique(anno$source))
+## [1] "Escherichia coli" "Photobacterium profundum"
+## [3] "Vibrio cholerae" "Burkholderia pseudomallei"
+## [5] "Francisella tularensis"
+```
