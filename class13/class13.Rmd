@@ -1,0 +1,57 @@
+---
+title: "class13"
+author: "Luan Tran"
+date: "5/14/2019"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+#What proportion of the Mexican Ancestry in Los Angeles Sample population MXL are homozygous for the asthma associated SNP (GIG) rs 8067378
+
+```{r}
+mxl <- read.csv("373531-SampleGenotypes-Homo_sapiens_Variation_Sample_rs8067378.csv")
+head(mxl)
+```
+
+How many of each genotype are there?
+```{r}
+table(mxl$Genotype..forward.strand.)
+```
+
+Proportion or percent of total for each genotype
+
+```{r}
+(table(mxl$Genotype..forward.strand.) / nrow(mxl)) * 100
+```
+
+```{r}
+library(seqinr)
+library(gtools)
+
+phred <- asc( s2c("DDDDCDEDCDDDDBBDDDCC@") ) - 33
+phred 
+
+prob <- 10**(-phred/10)
+```
+
+
+Section 4
+
+```{r}
+expr <- read.table("sec4.txt")
+head(expr)
+boxplot(exp~geno, data=expr)
+```
+
+```{r}
+inds <- expr$geno == "G/G"
+inds
+```
+
+
+
+
+

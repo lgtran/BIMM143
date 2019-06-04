@@ -1,0 +1,132 @@
+class13
+================
+Luan Tran
+5/14/2019
+
+\#What proportion of the Mexican Ancestry in Los Angeles Sample
+population MXL are homozygous for the asthma associated SNP (GIG) rs
+8067378
+
+``` r
+mxl <- read.csv("373531-SampleGenotypes-Homo_sapiens_Variation_Sample_rs8067378.csv")
+head(mxl)
+```
+
+    ##   Sample..Male.Female.Unknown. Genotype..forward.strand. Population.s.
+    ## 1                  NA19648 (F)                       A|A ALL, AMR, MXL
+    ## 2                  NA19649 (M)                       G|G ALL, AMR, MXL
+    ## 3                  NA19651 (F)                       A|A ALL, AMR, MXL
+    ## 4                  NA19652 (M)                       G|G ALL, AMR, MXL
+    ## 5                  NA19654 (F)                       G|G ALL, AMR, MXL
+    ## 6                  NA19655 (M)                       A|G ALL, AMR, MXL
+    ##   Father Mother
+    ## 1      -      -
+    ## 2      -      -
+    ## 3      -      -
+    ## 4      -      -
+    ## 5      -      -
+    ## 6      -      -
+
+How many of each genotype are there?
+
+``` r
+table(mxl$Genotype..forward.strand.)
+```
+
+    ## 
+    ## A|A A|G G|A G|G 
+    ##  22  21  12   9
+
+Proportion or percent of total for each genotype
+
+``` r
+(table(mxl$Genotype..forward.strand.) / nrow(mxl)) * 100
+```
+
+    ## 
+    ##     A|A     A|G     G|A     G|G 
+    ## 34.3750 32.8125 18.7500 14.0625
+
+``` r
+library(seqinr)
+library(gtools)
+
+phred <- asc( s2c("DDDDCDEDCDDDDBBDDDCC@") ) - 33
+phred 
+```
+
+    ##  D  D  D  D  C  D  E  D  C  D  D  D  D  B  B  D  D  D  C  C  @ 
+    ## 35 35 35 35 34 35 36 35 34 35 35 35 35 33 33 35 35 35 34 34 31
+
+``` r
+prob <- 10**(-phred/10)
+```
+
+Section 4
+
+``` r
+expr <- read.table("sec4.txt")
+head(expr)
+```
+
+    ##    sample geno      exp
+    ## 1 HG00367  A/G 28.96038
+    ## 2 NA20768  A/G 20.24449
+    ## 3 HG00361  A/A 31.32628
+    ## 4 HG00135  A/A 34.11169
+    ## 5 NA18870  G/G 18.25141
+    ## 6 NA11993  A/A 32.89721
+
+``` r
+boxplot(exp~geno, data=expr)
+```
+
+![](class13_files/figure-gfm/unnamed-chunk-5-1.png)<!-- -->
+
+``` r
+inds <- expr$geno == "G/G"
+inds
+```
+
+    ##   [1] FALSE FALSE FALSE FALSE  TRUE FALSE FALSE FALSE  TRUE FALSE FALSE
+    ##  [12] FALSE FALSE FALSE FALSE FALSE  TRUE FALSE FALSE  TRUE FALSE FALSE
+    ##  [23]  TRUE FALSE FALSE FALSE FALSE  TRUE  TRUE FALSE  TRUE  TRUE FALSE
+    ##  [34] FALSE  TRUE FALSE FALSE FALSE FALSE FALSE  TRUE FALSE FALSE FALSE
+    ##  [45] FALSE  TRUE  TRUE FALSE  TRUE  TRUE FALSE FALSE FALSE FALSE FALSE
+    ##  [56]  TRUE  TRUE FALSE FALSE FALSE  TRUE FALSE FALSE FALSE FALSE FALSE
+    ##  [67] FALSE FALSE FALSE FALSE FALSE  TRUE  TRUE FALSE FALSE FALSE  TRUE
+    ##  [78] FALSE  TRUE FALSE FALSE FALSE FALSE FALSE  TRUE FALSE FALSE FALSE
+    ##  [89]  TRUE FALSE FALSE  TRUE  TRUE FALSE FALSE FALSE FALSE FALSE FALSE
+    ## [100] FALSE FALSE FALSE FALSE  TRUE  TRUE  TRUE FALSE FALSE  TRUE  TRUE
+    ## [111]  TRUE FALSE FALSE  TRUE  TRUE FALSE  TRUE  TRUE  TRUE FALSE FALSE
+    ## [122] FALSE FALSE FALSE FALSE FALSE FALSE  TRUE FALSE FALSE FALSE  TRUE
+    ## [133] FALSE FALSE  TRUE FALSE FALSE FALSE FALSE  TRUE FALSE FALSE  TRUE
+    ## [144] FALSE FALSE FALSE FALSE FALSE FALSE  TRUE FALSE FALSE  TRUE FALSE
+    ## [155] FALSE  TRUE FALSE FALSE  TRUE FALSE FALSE FALSE  TRUE FALSE FALSE
+    ## [166]  TRUE FALSE FALSE FALSE  TRUE  TRUE  TRUE FALSE FALSE  TRUE FALSE
+    ## [177] FALSE  TRUE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
+    ## [188] FALSE FALSE  TRUE FALSE FALSE  TRUE  TRUE  TRUE FALSE FALSE FALSE
+    ## [199]  TRUE FALSE  TRUE FALSE FALSE FALSE FALSE FALSE  TRUE FALSE FALSE
+    ## [210] FALSE  TRUE FALSE FALSE FALSE FALSE FALSE FALSE  TRUE FALSE FALSE
+    ## [221] FALSE FALSE FALSE  TRUE  TRUE FALSE FALSE FALSE FALSE FALSE FALSE
+    ## [232]  TRUE  TRUE FALSE FALSE FALSE FALSE FALSE  TRUE FALSE  TRUE FALSE
+    ## [243] FALSE FALSE FALSE FALSE  TRUE FALSE FALSE  TRUE FALSE FALSE  TRUE
+    ## [254]  TRUE FALSE FALSE FALSE FALSE  TRUE FALSE  TRUE FALSE FALSE FALSE
+    ## [265] FALSE FALSE  TRUE  TRUE FALSE FALSE  TRUE  TRUE FALSE FALSE FALSE
+    ## [276] FALSE FALSE FALSE FALSE  TRUE FALSE FALSE  TRUE FALSE  TRUE FALSE
+    ## [287]  TRUE  TRUE FALSE FALSE FALSE  TRUE  TRUE FALSE FALSE FALSE FALSE
+    ## [298] FALSE  TRUE FALSE FALSE FALSE FALSE FALSE FALSE FALSE  TRUE  TRUE
+    ## [309] FALSE FALSE FALSE FALSE FALSE  TRUE FALSE  TRUE FALSE FALSE  TRUE
+    ## [320] FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE  TRUE
+    ## [331] FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE  TRUE FALSE
+    ## [342] FALSE FALSE  TRUE FALSE FALSE FALSE FALSE FALSE FALSE  TRUE FALSE
+    ## [353] FALSE FALSE  TRUE  TRUE  TRUE FALSE FALSE FALSE  TRUE  TRUE FALSE
+    ## [364]  TRUE FALSE FALSE FALSE FALSE  TRUE FALSE FALSE FALSE  TRUE FALSE
+    ## [375]  TRUE  TRUE FALSE  TRUE  TRUE  TRUE  TRUE FALSE  TRUE FALSE  TRUE
+    ## [386] FALSE FALSE FALSE FALSE FALSE  TRUE FALSE  TRUE FALSE FALSE FALSE
+    ## [397] FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
+    ## [408] FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
+    ## [419] FALSE FALSE  TRUE FALSE FALSE FALSE FALSE FALSE FALSE  TRUE FALSE
+    ## [430] FALSE FALSE FALSE FALSE FALSE  TRUE  TRUE FALSE FALSE FALSE FALSE
+    ## [441] FALSE FALSE FALSE FALSE FALSE  TRUE FALSE FALSE FALSE FALSE FALSE
+    ## [452] FALSE FALSE  TRUE FALSE FALSE  TRUE  TRUE FALSE FALSE FALSE FALSE
