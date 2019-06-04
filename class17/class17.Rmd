@@ -1,0 +1,172 @@
+---
+title: "class17"
+author: "Luan Tran"
+date: "5/28/2019"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(RCy3)
+```
+
+```{r}
+library(igraph)
+library(RColorBrewer)
+```
+
+```{r}
+g <- makeSimpleIgraph()
+g
+
+```
+
+
+
+```{r}
+knitr::include_graphics("./demo.png")
+```
+
+```{r}
+
+knitr::include_graphics("./demo_marquee.png")
+```
+
+
+```{r}
+plot(g)
+```
+
+```{r}
+## scripts for processing located in "inst/data-raw/"
+prok_vir_cor <- read.delim("virus_prok_cor_abundant.tsv", stringsAsFactors = FALSE)
+
+## Have a peak at the first 6 rows
+head(prok_vir_cor)
+```
+
+```{r}
+g <- graph.data.frame(prok_vir_cor, directed = FALSE)
+g
+```
+
+
+```{r}
+class(g)
+g
+```
+
+```{r}
+plot(g, vertex.label=NA)
+plot(g, vertex.size=3, vertex.label=NA)
+```
+
+```{r}
+cb <- cluster_edge_betweenness(g)
+cb
+```
+
+```{r}
+plot(cb, y=g, vertex.label=NA,  vertex.size=3)
+```
+
+
+```{r}
+head( membership(cb) )
+```
+
+```{r}
+# Calculate and plot node degree of our network
+d <- degree(g)
+hist(d, breaks=30, col="lightblue", main ="Node Degree Distribution")
+```
+
+```{r}
+plot( degree_distribution(g), type="h" )
+```
+
+```{r}
+pr <- page_rank(g)
+head(pr$vector)
+```
+
+```{r}
+# Make a size vector btwn 2 and 20 for node plotting size
+
+v.size <- BBmisc::normalize(pr$vector, range=c(2,20), method="range")
+plot(g, vertex.size=v.size, vertex.label=NA)
+```
+
+```{r}
+v.size <- BBmisc::normalize(d, range=c(2,20), method="range")
+plot(g, vertex.size=v.size, vertex.label=NA)
+```
+
+```{r}
+b <- betweenness(g)
+v.size <- BBmisc::normalize(b, range=c(2,20), method="range")
+plot(g, vertex.size=v.size, vertex.label=NA)
+```
+
+```{r}
+phage_id_affiliation <- read.delim("phage_ids_with_affiliation.tsv")
+head(phage_id_affiliation)
+```
+
+```{r}
+bac_id_affi <- read.delim("prok_tax_from_silva.tsv", stringsAsFactors = FALSE)
+head(bac_id_affi)
+```
+
+```{r}
+## Extract out our vertex names
+genenet.nodes <- as.data.frame(vertex.attributes(g), stringsAsFactors=FALSE)
+head(genenet.nodes)
+```
+
+```{r}
+length( grep("^ph_",genenet.nodes[,1]) )
+```
+
+```{r}
+# We dont need all annotation data so lets make a reduced table 'z' for merging
+z <- bac_id_affi[,c("Accession_ID", "Kingdom", "Phylum", "Class")]
+n <- merge(genenet.nodes, z, by.x="name", by.y="Accession_ID", all.x=TRUE)
+head(n)
+```
+
+```{r}
+# Check on the column names before deciding what to merge
+colnames(n)
+```
+
+```{r}
+colnames(phage_id_affiliation)
+
+```
+
+```{r}
+# Again we only need a subset of `phage_id_affiliation` for our purposes
+y <- phage_id_affiliation[, c("first_sheet.Phage_id_network", "phage_affiliation","Tax_order", "Tax_subfamily")]
+
+# Add the little phage annotation that we have
+x <- merge(x=n, y=y, by.x="name", by.y="first_sheet.Phage_id_network", all.x=TRUE)
+
+## Remove duplicates from multiple matches
+x <- x[!duplicated( (x$name) ),]
+head(x)
+```
+
+```{r}
+genenet.nodes <- x
+```
+
+
+```{r}
+# Set the main nodes colname to the required "id" 
+colnames(genenet.nodes)[1] <- "id"
+```
+
