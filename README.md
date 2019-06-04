@@ -3,7 +3,7 @@
 This is my classwork from [BIMM143 Spring 2019](https://bioboot.github.io/bimm143_S19/) at UCSD.
 
 - class 05: R Basics, data structures and data input
-- class 06: R graphics, generating plots with R
+- class 06: [R graphics, generating plots with R](https://github.com/lgtran/bimm143/blob/master/class06/class06.md)
 - class 07: Some thing else here
 - class 08
 - class 09
