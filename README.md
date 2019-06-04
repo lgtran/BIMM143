@@ -2,7 +2,7 @@
 
 This is my classwork from [BIMM143 Spring 2019](https://bioboot.github.io/bimm143_S19/) at UCSD.
 
-- class 05: [R Basics, data structures and data input](https://github.com/lgtran/bimm143/blob/master/class05/class05.md)
+Class 05: [R Basics, data structures and data input](https://github.com/lgtran/bimm143/blob/master/class05/class05.md)
 - class 06: [R graphics, generating plots with R](https://github.com/lgtran/bimm143/blob/master/class06/class06.md)
 - class 07: [Bioinformatics R PackagesCRAN/BioConductor ](https://github.com/lgtran/bimm143/blob/master/class07/Class07.md)
 - class 08: [Intro to machine learning for Bioinformatics](https://github.com/lgtran/bimm143/blob/master/class8/UKfoodsplot.md)
