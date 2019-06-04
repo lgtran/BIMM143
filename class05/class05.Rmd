@@ -1,9 +1,15 @@
-title: "Class 5 R Graphics"
+---
+title: "class05"
 author: "Luan Tran"
-date: "Apr 18 2019"
-output: "github_document"
-#' ---
-  
+date: "6/4/2019"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
 # Class 5 R Graphics
 
 # 2A. Line
@@ -31,3 +37,5 @@ barplot(counts$Count, names.arg = counts$Sample, las=2,
 
 barplot(counts$Count, names.arg = counts$Sample, las=2,
         col=c(1,2))
+```
+
